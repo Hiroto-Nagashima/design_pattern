@@ -27,6 +27,16 @@ class ShippingFeePolicy
   end
 end
 
+class BasicPrice
+  def initialize(price)
+    @price = price
+  end
+
+  def rate(rate)
+    @price * rate
+  end
+end
+
 class ShippingFee
   def initialize(destination, total_number_of_items)
     @destination = destination
