@@ -20,8 +20,10 @@ class Child
   end
 
   def notify
+    return unless age_valid?
+
     @observers.each do |observer|
-      observer.give_present
+      observer.give_present(self)
     end
   end
 
@@ -32,23 +34,38 @@ class Child
 
     notify
   end
+
+  private
+
+  def age_valid?
+    adult_age = 21
+
+    if @age > adult_age
+      p 'プレゼントをもらう年齢ではありません'
+
+      false
+    else
+      true
+    end
+  end
 end
 
+#他クラスがageを持つオブジェクトに依存する
 class Mother
-  def give_present
-    p 'トランプを買ってあげる！'
+  def give_present(child)
+    p 'トランプを買ってあげる！' if child.age < 8
   end
 end
 
 class GrandMother
-  def give_present
-    p 'PS5を買ってあげる'
+  def give_present(child)
+    p 'PS5を買ってあげる' if child.age < 110
   end
 end
 
 class GrandFather
-  def give_present
-    p '車を買ってあげる'
+  def give_present(child)
+    p '車を買ってあげる' if child.age < 60
   end
 end
 
@@ -61,4 +78,4 @@ hiroto.add_observer(mother)
 hiroto.add_observer(grand_father)
 hiroto.add_observer(grand_mother)
 
-hiroto.happy_birthday(4)
+hiroto.happy_birthday(7)
