@@ -1,48 +1,54 @@
 class IceCream
-  def new_name
-    'アイスクリーム'
-  end
-
-  def new_price
-    400
-  end
-end
-
-class IceCreamDecorator < IceCream
   def initialize(topping)
     @topping = topping
   end
 
-  def new_name
-    @topping.new_name
-  end
-
-  def new_price
-    @topping.new_price
+  def serve
+    p "お待たせしました、トッピングは#{@topping.new_name}でございます"
   end
 end
 
-class Chocolate < IceCreamDecorator
+class Topping
+  def initialize(name:, price:)
+    @name = name
+    @price = price
+  end
+
   def new_name
-    'チョコレート' + @topping.new_name
+    @name
   end
 
   def new_price
-    100 + @topping.new_price
+    @price
   end
 end
 
-class Biscuit < IceCreamDecorator
+class ToppingDecorator < Topping
+  def initialize(topping, name:, price:)
+    super(name: name, price: price)
+    @topping = topping
+  end
+
   def new_name
-    'ビスケット' + @topping.new_name
+    @name + @topping.new_name
   end
 
   def new_price
-    300 + @topping.new_price
+    @price + @topping.new_price
   end
 end
 
-p Chocolate.new(Biscuit.new(IceCream.new)).new_name
-p Biscuit.new(Chocolate.new(IceCream.new)).new_name
+class Chocolate < ToppingDecorator
+  def initialize(topping, name: "チョコレート", price: 100)
+    super
+  end
+end
 
-#Chocolate is a Icecreamではないので適切な継承関係ではない気がする,,
+class Biscuit < ToppingDecorator
+  def initialize(topping, name: "ビスケット", price: 200)
+    super
+  end
+end
+
+
+IceCream.new(Chocolate.new(Biscuit.new(Topping.new(name: "トッピング", price: 400)))).serve
